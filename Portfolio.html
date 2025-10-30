@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Portfolio Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .view-more {
+            color: #4a9eff;
+            font-size: 13px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="chart-container">
+            <div class="chart-title">Asset Allocation Based On Industry</div>
+            <div class="chart-wrapper">
+                <canvas id="industryChart"></canvas>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4ecdc4;"></div>
+                    <span>Financial</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e88ba1;"></div>
+                    <span>Consumer Discretionary</span>
+                </div>
+                <div class="legend-item">
+                    <span class="view-more">+3 View More</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">Asset Allocation Based On Market Cap</div>
+            <div class="chart-wrapper">
+                <canvas id="marketCapChart"></canvas>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4ecdc4;"></div>
+                    <span>Large Cap</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e88ba1;"></div>
+                    <span>Mid Cap</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffc145;"></div>
+                    <span>Small Cap</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">Category Distribution Analysis</div>
+            <div class="chart-wrapper">
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4ecdc4;"></div>
+                    <span>Equity</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e88ba1;"></div>
+                    <span>Debt</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffc145;"></div>
+                    <span>Hybrid</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4a8fc7;"></div>
+                    <span>Others</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const colors = {
+            cyan: '#3bbfd5',
+            pink: '#d46081',
+            orange: '#fab617',
+            blue: '#1870b8',
+            darkOrange: '#ff8235',
+            purple: '#656ae7',
+            maroon: '#974d6f',
+            red: '#f7583e',
+            teal: '#59c9d5',
+            yellow: '#f9cb3b',
+            indigo: '#474e7f',
+            deepPurple: '#db7433',
+            coral: '#e3a087',
+            pink2: '#fb982e',
+            brown: '#ba7362',
+            mauve: '#55dd9d',
+            sage: '#6b4aa6',
+            lavender: '#87d8e3',
+            rose: '#f34b83'
+        };
+
+        // Industry Bar Chart
+        const industryCtx = document.getElementById('industryChart').getContext('2d');
+        new Chart(industryCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Financial', 'Consu...', 'Technol...', 'Energy', 'Automob...'],
+                datasets: [{
+                    data: [32, 22, 18, 15, 13],
+                    backgroundColor: [
+                        colors.cyan,
+                        colors.pink,
+                        colors.orange,
+                        colors.blue,
+                        colors.darkOrange
+                    ],
+                    barThickness: 50
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 35,
+                        ticks: {
+                            stepSize: 10
+                        },
+                        grid: {
+                            color: '#e5e5e5'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Market Cap Doughnut Chart
+        const marketCapCtx = document.getElementById('marketCapChart').getContext('2d');
+        new Chart(marketCapCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Large Cap', 'Mid Cap', 'Small Cap'],
+                datasets: [{
+                    data: [58, 27, 15],
+                    backgroundColor: [colors.cyan, colors.pink, colors.orange],
+                    borderWidth: 0,
+                    cutout: '75%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [{
+                afterDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    chart.data.datasets.forEach((dataset, i) => {
+                        const meta = chart.getDatasetMeta(i);
+                        meta.data.forEach((element, index) => {
+                            ctx.fillStyle = dataset.backgroundColor[index];
+                            const fontSize = 14;
+                            const fontStyle = 'bold';
+                            const fontFamily = 'Arial';
+                            ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+                            const dataString = dataset.data[index] + '%';
+                            const position = element.tooltipPosition();
+                            ctx.fillText(dataString, position.x - 15, position.y);
+                        });
+                    });
+                }
+            }]
+        });
+
+        // Category Pie Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Equity', 'Debt', 'Hybrid', 'Others'],
+                datasets: [{
+                    data: [43, 37, 15, 5],
+                    backgroundColor: [colors.cyan, colors.pink, colors.orange, colors.blue],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [{
+                afterDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    chart.data.datasets.forEach((dataset, i) => {
+                        const meta = chart.getDatasetMeta(i);
+                        meta.data.forEach((element, index) => {
+                            ctx.fillStyle = dataset.backgroundColor[index];
+                            const fontSize = 16;
+                            const fontStyle = 'bold';
+                            const fontFamily = 'Arial';
+                            ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+                            const dataString = dataset.data[index] + '%';
+                            const position = element.tooltipPosition();
+                            ctx.fillText(dataString, position.x - 15, position.y);
+                        });
+                    });
+                }
+            }]
+        });
+    </script>
+</body>
+</html>
